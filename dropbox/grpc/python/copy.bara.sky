@@ -1,0 +1,14 @@
+core.workflow(
+    name = "default",
+    origin = folder.origin(),
+    destination = git.destination(
+        url = "git@github.com:dropbox/altgrpc.git",
+        fetch = "master",
+        push = "master",
+    ),
+    authoring = authoring.pass_thru('Dropboxer <noreply@dropbox.com>'),
+    mode = "ITERATIVE",
+    # Change path to the folder you want to publish publicly
+    origin_files = glob(["dropbox/grpc/**"]),
+)
+
