@@ -65,6 +65,11 @@ std::shared_ptr<Dispatcher> ClientQueue() noexcept {
   return dispatcher;
 }
 
+std::shared_ptr<Dispatcher> CallbackQueue() noexcept {
+  static std::shared_ptr<Dispatcher> dispatcher = NewClientQueue();
+  return dispatcher;
+}
+
 std::shared_ptr<Dispatcher> Dispatcher::New(PyObject* thread_pool_submit) noexcept {
   return std::make_shared<Dispatcher>(std::make_shared<State>(AddRef(thread_pool_submit)));
 }
@@ -91,6 +96,9 @@ void Dispatcher::StartLoop() noexcept {
 void Dispatcher::State::Loop(std::shared_ptr<State> self) {
   PythonExecCtx py_exec_ctx;
   py_exec_ctx.RegisterOnExitCallback([self] { self->Shutdown(); });
+  if (!py_exec_ctx.Acquired()) {
+    return;
+  }
   for (;;) {
     {
       auto nogil = gil::Release();
