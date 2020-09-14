@@ -199,7 +199,7 @@ void Rendezvous::Finalize(::grpc::Status status, AutoReleasedObject result) noex
     done_ = true;
   }
   if (!callbacks_.empty()) {
-    Dispatcher::RegisterCallbackInPool(ClientQueue(), [callbacks = std::move(callbacks_)]() noexcept {
+    Dispatcher::RegisterCallbackInPool(CallbackQueue(), [callbacks = std::move(callbacks_)]() noexcept {
       for (auto& callback : callbacks) {
         AutoReleasedObject decref{callback};
         CallPython(callback);

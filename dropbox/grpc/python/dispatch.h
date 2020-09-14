@@ -100,6 +100,7 @@ class Dispatcher {
 };
 
 std::shared_ptr<Dispatcher> ClientQueue() noexcept;
+std::shared_ptr<Dispatcher> CallbackQueue() noexcept;
 
 }  // namespace python
 }  // namespace grpc
